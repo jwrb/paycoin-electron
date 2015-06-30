@@ -2,9 +2,11 @@ var BrowserWindow = require('browser-window')
   , path = require('path')
   , nopt = require('nopt')
   , knownOpts = { config: path
+                , datadir: path
                 , 'no-daemon': Boolean
                 }
   , shortHand = { c: ['--config']
+                , d: ['--datadir']
                 , n: ['--no-daemon']
                 }
   , parsed = nopt(knownOpts, shortHand)
@@ -18,12 +20,18 @@ var splashUrl = 'file://' +
 
 if (parsed.config) {
   process.env.XPY_CONFIG = parsed.config
+} else if (parsed.datadir){
+  process.env.XPY_CONFIG = parsed.datadir+"/paycoin.conf"
 }
 
 var daemon = require('./lib/daemon')()
 
 if (!parsed.daemon && (process.platform === 'darwin' || process.platform === 'linux')) {
-  daemon.start()
+  if (parsed.datadir) {
+    daemon.start(parsed.datadir)
+  } else {
+    daemon.start(0)
+  }
 }
 
 var app = require('app')
