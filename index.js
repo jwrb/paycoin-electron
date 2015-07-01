@@ -27,10 +27,12 @@ if (parsed.config) {
 var daemon = require('./lib/daemon')()
 
 if (!parsed.daemon && (process.platform === 'darwin' || process.platform === 'linux')) {
-  if (parsed.datadir) {
-    daemon.start(parsed.datadir)
+  if (parsed.config) {
+      daemon.start(parsed.config, 0)
+  } else if (parsed.datadir) {
+    daemon.start(parsed.datadir, 1)
   } else {
-    daemon.start(0)
+    daemon.start(0, 0)
   }
 }
 
