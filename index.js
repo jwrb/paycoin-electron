@@ -22,14 +22,14 @@ if (parsed.config) {
 
 var daemon = require('./lib/daemon')()
 
-if (!parsed.daemon && process.platform === 'darwin') {
+if (!parsed.daemon && (process.platform === 'darwin' || process.platform === 'linux')) {
   daemon.start()
 }
 
 var app = require('app')
 app.on('ready', setup)
 app.on('window-all-closed', function() {
-  if (process.platform !== 'darwin') {
+  if (process.platform !== 'darwin' || process.platform !== 'linux') {
     app.quit()
   }
 })
