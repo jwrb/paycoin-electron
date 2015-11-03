@@ -73,6 +73,35 @@ function App(el, currentWindow) {
     return false
   })
 
+
+  var sels = '#settingsNav a, #settingsNav a span, #settingsNav a i, ' +
+    '#settingsNav li a'
+  delegate.on(el, sels, 'click', function(e) {
+    e.preventDefault()
+    var a = getParentA(e.target)
+    var href = a.getAttribute('href')
+    log('settings change: href=%s', href)
+    if (self.activeNav === href) return false
+    if (self.activeNavNode)
+      self.activeNavNode.classList.remove('active')
+    if (a.parentNode) {
+      self.activeNavNode = a.parentNode
+      self.activeNavNode.classList.add('active')
+    }
+
+    var settingsTabs = ['general', 'management', 'network', 'advanced']
+    
+    settingsTabs.forEach(function(tab) {
+      var selectedTab = document.getElementById(tab)
+      selectedTab.classList.add('hidden')
+    })
+
+    var settingsTab = document.getElementById(href.substring(1))
+    settingsTab.classList.remove('hidden')
+
+    return false
+  })
+
   self.data = {
     info: {
       connections: 0
